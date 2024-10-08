@@ -1,0 +1,27 @@
+version: "3"
+include:
+  - proxy.yaml
+services:
+  mysql:
+    image: mysql:8.0-oraclelinux8
+    environment:
+      - MYSQL_USER=app
+      - MYSQL_DATABASE=example
+    env_file: "mysql_compose.list.env"
+    networks:
+      backend:
+        ipv4_address: 172.20.0.10
+    restart: on-failure
+
+  web:
+    image: cr.yandex/crpooo92jkf633et5esq/web_app_py:1.0.0
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=app
+      - DB_NAME=example
+      - DB_TABLE=requests_new
+    env_file: "web_compose.list.env"
+    networks:
+      backend:
+        ipv4_address: 172.20.0.5
+    restart: on-failure
