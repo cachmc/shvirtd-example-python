@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 import os
+import time
 import mysql.connector
 from datetime import datetime
 
@@ -11,13 +12,21 @@ db_password=os.environ.get('DB_PASSWORD')
 db_database=os.environ.get('DB_NAME')
 db_table=os.environ.get('DB_TABLE')
 
-# Подключение к базе данных MySQL
-db = mysql.connector.connect(
-host=db_host,
-user=db_user,
-password=db_password,
-database=db_database,
-autocommit=True )
+while True:
+    try:
+        # Подключение к базе данных MySQL
+        db = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_database,
+        autocommit=True )
+        print("INFO: Connection to DB is successful")
+        break
+    except:
+        print("WARNING: Waiting for connection to DB")
+        time.sleep(10)
+
 cursor = db.cursor()
 
 # SQL-запрос для создания таблицы в БД
